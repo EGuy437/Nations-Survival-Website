@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minecraft Server Updates</title>
+  <meta name="description" content="Latest news and past updates for our Minecraft server." />
+  <!--
+  =====================================================
+  HOW TO USE (GitHub Pages compatible, no backend required)
+  =====================================================
+  This site pulls "posts" from GitHub Releases on a repo you control.
+  Only collaborators can publish releases, so only you can post.
+
+  1) Create (or pick) a GitHub repo to be the posts source, e.g. "minecraft-server-posts".
+     - Go to the repo → Releases → "Draft a new release".
+     - Release title = Post title; Release notes = Post content (Markdown supported).
+     - Click "Publish" (drafts will NOT appear on the site).
+  2) Fork/clone this site into a separate repo (or into the same repo’s /docs directory) and enable GitHub Pages.
+     - If it’s the same repo, put this file at /docs/index.html and enable Pages → Build from /docs.
+     - If it’s a separate repo, place this as /index.html and enable Pages from the root.
+  3) Configure OWNER and REPO in the JS config below.
+  4) (Optional) Add a GitHub personal access token (classic, no scopes needed for public) for higher rate limits.
+  5) Publish new posts by creating a new Release on the posts repo. The site will reflect the latest automatically.
+
+  Notes
+  - The latest release is featured up top; older releases appear under "All Updates".
+  - Each post has a shareable permalink to the GitHub release.
+  - Markdown is rendered client‑side via Marked.js (CDN).
+  - If you want tags/categories, include them in the title like: "[Event] Weekend War | 1.20 Update" – search will match them.
+  -->
+
+  <style>
+    :root{
+      --bg: #0b1020;        /* deep blue-charcoal */
+      --card: #121933;      /* card background */
+      --muted: #8ea0ff;     /* accents */
+      --text: #e7ebff;      /* main text */
+      --subtext: #b8c0ff;   /* secondary text */
+      --link: #a6b4ff;
+      --chip: rgba(255,255,255,.08);
+      --shadow: 0 10px 30px rgba(0,0,0,.4);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --maxw: 1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";}
+    a{color:var(--link);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    header{
+      position:sticky;top:0;z-index:50;background:linear-gradient(180deg, rgba(11,16,32,.9), rgba(11,16,32,.5) 70%, rgba(11,16,32,0));
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:16px;padding:14px 18px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .brand .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#29c95a,#1aa34a);box-shadow:var(--shadow)}
+    .brand .logo span{font-weight:900;color:white}
+    .tabs{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,.08);color:var(--subtext)}
+    .tab.active{background:var(--chip);color:var(--text)}
+
+    main{max-width:var(--maxw);margin:20px auto;padding:0 18px 80px}
+
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:stretch}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card-inner{padding:18px 18px}
+
+    .latest h2{margin:0 0 8px}
+    .eyebrow{font-size:.78rem;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}
+    .post-title{font-size:1.6rem;margin:6px 0 10px;line-height:1.2}
+    .meta{font-size:.9rem;color:var(--subtext)}
+
+    .content{margin-top:14px;line-height:1.65}
+    .content h1,.content h2,.content h3{margin-top:1em}
+    .content pre{overflow:auto;background:rgba(0,0,0,.35);padding:12px;border-radius:12px}
+    .content img{max-width:100%;border-radius:12px}
+
+    .side{display:flex;flex-direction:column;gap:16px}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--chip);color:var(--subtext);border:1px solid rgba(255,255,255,.06)}
+
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .search{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:999px;padding:10px 12px;border:1px solid rgba(255,255,255,.08)}
+    .search input{flex:1;background:transparent;border:none;outline:none;color:var(--text)}
+    .btn{cursor:pointer;border:none;border-radius:999px;padding:10px 14px;background:linear-gradient(135deg,#3c59ff,#6f8cff);color:white;font-weight:600}
+
+    .updates{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .update{padding:14px}
+    .update h3{margin:0 0 6px;font-size:1.1rem}
+    .update p{margin:0;color:var(--subtext)}
+
+    .empty{padding:28px;text-align:center;color:var(--subtext)}
+
+    footer{max-width:var(--maxw);margin:0 auto;padding:30px 18px;color:var(--subtext);border-top:1px solid rgba(255,255,255,.06)}
+
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+      .updates{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"><span>MC</span></div>
+        <div>Minecraft Server Updates</div>
+      </div>
+      <div class="tabs">
+        <a class="tab active" href="#home">Home</a>
+        <a class="tab" href="#all">All Updates</a>
+        <a class="tab" href="#about">About</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <article class="latest card">
+        <div class="card-inner">
+          <div class="eyebrow">Latest Post</div>
+          <h2 class="post-title" id="latest-title">Loading…</h2>
+          <div class="meta" id="latest-meta"></div>
+          <div class="content" id="latest-body"></div>
+          <p style="margin-top:14px"><a id="latest-link" href="#" target="_blank" rel="noopener">Open on GitHub ↗</a></p>
+        </div>
+      </article>
+      <aside class="side">
+        <div class="card card-inner">
+          <div class="chip">💡 Tip: Create a new GitHub Release to post an update.</div>
+          <div class="chip">🔒 Only repo collaborators can publish releases, so only you can post.</div>
+          <div class="chip">📝 Markdown supported (images, code, links).</div>
+        </div>
+        <div class="card card-inner">
+          <div class="eyebrow" style="margin-bottom:6px">Quick Actions</div>
+          <div class="toolbar">
+            <button class="btn" id="refresh">Refresh</button>
+            <a class="btn" id="newRelease" href="#" target="_blank" rel="noopener">New Post</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="list" class="card" style="margin-top:24px">
+      <div class="card-inner">
+        <div class="eyebrow">All Updates</div>
+        <div class="search" style="margin-top:10px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.3-4.3m1.3-5.2A7.8 7.8 0 1110.2 3a7.8 7.8 0 017.8 7.8z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="q" placeholder="Search titles & content…" />
+        </div>
+        <div class="updates" id="updates"></div>
+        <div class="empty" id="empty" hidden>No posts yet. Publish a GitHub Release to see it here.</div>
+      </div>
+    </section>
+
+    <section id="about" class="card" style="margin-top:24px">
+      <div class="card-inner">
+        <div class="eyebrow">About</div>
+        <p style="margin-top:8px;color:var(--subtext)">This site automatically showcases the newest announcement from our Minecraft server and keeps a browsable archive of older posts.
+        Posts are powered by GitHub Releases so only collaborators can publish them.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>© <span id="year"></span> Minecraft Server • Powered by GitHub Pages</small>
+  </footer>
+
+  <!-- Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // ======================
+    // CONFIGURE THESE VALUES
+    // ======================
+    const OWNER = "your-github-username";   // ← change me
+    const REPO  = "minecraft-server-posts"; // ← change me (the repo where you publish Releases)
+
+    // Optional: add a token for higher rate limits (store as a GitHub Pages secret and inject at build if you use a static site generator; otherwise leave blank)
+    const GITHUB_TOKEN = ""; // leave empty if not needed
+
+    // =============
+    // App Utilities
+    // =============
+    const api = async (path, params = {}) => {
+      const headers = { 'Accept': 'application/vnd.github+json' };
+      if (GITHUB_TOKEN) headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+      const url = `https://api.github.com/repos/${OWNER}/${REPO}${path}`;
+      const res = await fetch(url, { headers });
+      if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
+      return res.json();
+    };
+
+    const fmtDate = (iso) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+
+    const state = { releases: [], filtered: [] };
+
+    async function loadReleases(){
+      // Pull latest 50 releases (adjust per_page as desired)
+      const data = await api('/releases?per_page=50');
+      state.releases = (data || []).filter(r => !r.draft); // ignore drafts
+      state.filtered = state.releases.slice();
+      render();
+    }
+
+    function render(){
+      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById('newRelease').href = `https://github.com/${OWNER}/${REPO}/releases/new`;
+
+      const latest = state.filtered[0] || state.releases[0];
+      const latestTitle = document.getElementById('latest-title');
+      const latestMeta  = document.getElementById('latest-meta');
+      const latestBody  = document.getElementById('latest-body');
+      const latestLink  = document.getElementById('latest-link');
+
+      if (!state.releases.length){
+        latestTitle.textContent = 'No posts yet';
+        latestMeta.textContent = '';
+        latestBody.innerHTML = '';
+        latestLink.href = `https://github.com/${OWNER}/${REPO}/releases`;
+        document.getElementById('updates').innerHTML = '';
+        document.getElementById('empty').hidden = false;
+        return;
+      }
+
+      latestTitle.textContent = latest.name || latest.tag_name || 'Untitled';
+      latestMeta.textContent = `Published ${fmtDate(latest.published_at)} · by ${latest.author?.login || 'unknown'}`;
+      latestBody.innerHTML = marked.parse(latest.body || '');
+      latestLink.href = latest.html_url;
+
+      const listEl = document.getElementById('updates');
+      listEl.innerHTML = '';
+      const posts = state.filtered.length ? state.filtered.slice(1) : state.releases.slice(1);
+      if (!posts.length){
+        document.getElementById('empty').hidden = false;
+      } else {
+        document.getElementById('empty').hidden = true;
+        posts.forEach(r => {
+          const div = document.createElement('article');
+          div.className = 'update card';
+          div.innerHTML = `
+            <h3>${escapeHtml(r.name || r.tag_name || 'Untitled')}</h3>
+            <p class="meta">${fmtDate(r.published_at)} · <a href="${r.html_url}" target="_blank" rel="noopener">Permalink ↗</a></p>
+            <div class="content">${marked.parse((r.body||'').slice(0, 500))}${(r.body||'').length>500 ? '…' : ''}</div>
+          `;
+          listEl.appendChild(div);
+        });
+      }
+    }
+
+    function escapeHtml(str){
+      return (str+"").replace(/[&<>\"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[s]));
+    }
+
+    // Search filter
+    document.getElementById('q').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      if (!q){ state.filtered = state.releases.slice(); return render(); }
+      state.filtered = state.releases.filter(r =>
+        (r.name||'').toLowerCase().includes(q) || (r.body||'').toLowerCase().includes(q)
+      );
+      render();
+    });
+
+    // Refresh button
+    document.getElementById('refresh').addEventListener('click', () => {
+      loadReleases().catch(err => alert(err.message));
+    });
+
+    // Initial load
+    loadReleases().catch(err => {
+      console.error(err);
+      document.getElementById('latest-title').textContent = 'Failed to load posts';
+      document.getElementById('latest-meta').textContent = '';
+      document.getElementById('latest-body').innerHTML = `<div class="empty">${escapeHtml(err.message)}</div>`;
+    });
+  </script>
+</body>
+</html>
